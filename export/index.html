@@ -1,0 +1,851 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+
+  <title>The beauty of brute force</title>
+
+  <meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+  <meta name="author" content="Hakim El Hattab">
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="libs/reveal.js/4.3.1/reset.css">
+  <link rel="stylesheet" href="libs/reveal.js/4.3.1/reveal.css">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+  <!-- highlight Theme -->
+  
+  <link rel="stylesheet" href="libs/highlight.js/11.3.1/styles/atom-one-light.min.css">
+  
+	
+		
+	<link rel="stylesheet" href="libs/reveal.js/4.3.1/plugin/chalkboard/style.css">
+	
+	
+	
+  <link rel="stylesheet" href="libs/reveal.js/4.3.1/plugin/customcontrols/style.css">
+  
+	
+
+
+
+  <!-- Revealjs Theme -->
+  
+  <link rel="stylesheet" href="libs/reveal.js/4.3.1/theme/simple.css" id="theme">
+  
+  
+
+  <link rel="stylesheet" href="libs/styles/tasklist.css">
+	<link rel="stylesheet" href="libs/styles/iota.css">
+	<link rel="stylesheet" href="libs/styles/layout.css">
+
+
+  <!-- Revealjs Theme -->
+  
+  <link rel="stylesheet" href="classRoom.css">
+  
+
+   <!-- css list -->
+	
+
+   
+
+</head>
+
+<body>
+
+   
+
+  <div class="reveal">
+
+    <!-- Any section element inside of this container is displayed as a slide -->
+    <div class="slides">
+
+      
+
+
+    
+        <section >
+            
+            <script src="https://cdn.tailwindcss.com"></script>
+<h1>暴力美学</h1>
+<p>The beauty of brute force</p>
+
+            </section>
+    
+
+
+
+    
+    <section>
+        <section >
+            <h1>枚举暴力，就坏么？</h1>
+<p>《狂人日记》——鲁迅（并没说过）</p>
+
+            </section>
+        
+            <section >
+                <h2>宇宙的本质就是暴力</h2>
+<img class="float-right px-10 .w-2/5" id="mb" src=""/>
+<p>每次刷新图片都不一样，</p>
+<p>令人着迷又向往。</p>
+<p>这么美丽的图片很难让人把它和“暴力”联系到一起，</p>
+<p>“暴力”真的有这么美吗？</p>
+<p>课程结尾将会教大家如何用程序渲染出这样的图片。</p>
+<script>
+    // 使用 api 渲染图片，兼容不支持 WASM 的浏览器
+    function randomInRange(min, max) {
+      return Math.random()<0.5? ((1-Math.random()) * (max-min) + min) : (Math.random() * (max - min) + min)
+    }
+    const mb = document.getElementById('mb')
+   
+    mb.setAttribute('src','https://service-avb1tv8k-1303953543.hk.apigw.tencentcs.com/release/image?scale='+randomInRange(9e-9,1.5e-7)+'&id=2')
+  
+</script>
+            </section>
+        
+            <section >
+                <h2>从一个简单的游戏说起</h2>
+<p>1970 年 10 月，《科学美国人》上刊登了一款游戏。</p>
+<p>这款游戏非常特殊，只用纸和笔就能玩。<s>所以中小学生上课又可以有新游戏玩了！</s></p>
+<p>具体来说，你在你的纸上画出二维的网格，每个格子与周围八个格子交互。</p>
+<p>我们称每个格子为“细胞”，每个细胞要么活着，要么死亡。</p>
+<p>这就是——<strong>康威生命游戏</strong></p>
+
+            </section>
+        
+            <section >
+                <h2>康威生命游戏</h2>
+<p>生命游戏中，对于任意细胞，规则如下：</p>
+<ul>
+<li>周围的存活细胞低于2个，孤独而死</li>
+<li>2个或3个存活细胞，保持原样。</li>
+<li>超过3个存活细胞时，该细胞死亡。（也许人太多买不起房，只是也许）</li>
+<li>周围有3个存活细胞时，复活。（remake 成功！）</li>
+</ul>
+<p><img src="./dist/img/Game_of_life_blinker.gif" alt="" class="fragment float-right px-10">
+信号灯，周期为 2 的震荡状态。</p>
+
+            </section>
+        
+            <section >
+                <h2>开始魔法！</h2>
+<p>滑翔机～</p>
+<p><img src="./dist/img/glider.gif" alt="" class="float-right px-10"></p>
+<p>周期为 4 的移动震荡状态。</p>
+<p>真的超酷，我们有了一个会移动的生命，就像浮游生物一样！</p>
+<p><img src="./dist/img/google-life-game.png" alt="" class="float-right px-10 w-1/2"></p>
+<p>还有一个小彩蛋，谷歌搜索“生命游戏”，你的页面里就会开始生命游戏！</p>
+<p><a href="https://playgameoflife.com/">在线试试生命游戏！</a></p>
+<p>主要试试发生器和吞噬者。（Simkin glider gun）</p>
+
+            </section>
+        
+            <section >
+                <h2>逻辑电路</h2>
+<iframe width="960" height="540" src="https://www.youtube.com/embed/vGWGeund3eA?start=59" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </section>
+        
+            <section >
+                <h2>life in life</h2>
+<iframe width="960" height="540" class="center" src="https://www.youtube.com/embed/xP5-iIeKXE8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </section>
+        
+
+    </section>
+    
+
+
+
+    
+    <section>
+        <section >
+            <h1>暴力的边界</h1>
+<p>The boundary of brute force</p>
+
+            </section>
+        
+            <section >
+                <h2>对他使用炎拳（暴力）吧</h2>
+<p>生命游戏规则是如此简单，在座的各位轻轻松松就能写出来。</p>
+<pre><code class="language-c">int game[N][N];
+</code></pre>
+<p>如果暴力是对的，好写的，那就不用管其他方面因素，直接大胆写吧！</p>
+<p>无论是对算法题目的理解，还是对计算机结构的认知，都有很大启发。</p>
+
+            </section>
+        
+            <section >
+                <h2>暴力枚举的本质</h2>
+<p><strong>暴力枚举的本质就是状态空间的遍历</strong></p>
+<p>比如说找一个正整数(<code>unsigned int</code>)的所有因子，首先它的因子肯定也是一个正整数，这也是所有的状态空间（集合）。</p>
+<p>根据因子的定义，显然因子是小于这个数本身的，于是我们缩小了状态空间。但是最坏情况状态空间仍然是整个正整数。</p>
+<p>我们发现因子都是成对出现的， $x$ 的成对的因子中，每对最小的不超过 $\sqrt{x}$</p>
+<pre><code class="language-cpp">// 无序，有重复
+vector&lt;unsigned&gt; factors(unsigned x) {
+  vector&lt;unsigned&gt; factors;
+  for(unsigned i=1;i&lt;=sqrt(x);i++){
+    if(x%i==0)factors.push_back(i,x/i);
+  }
+  return factors;
+}
+</code></pre>
+
+            </section>
+        
+            <section >
+                <h2>浮点数之谜</h2>
+<p>浮点数是想要在计算机里表示一部分有理数所诞生的数据类型。</p>
+<p>但是其非常复杂，直接看 IEEE 标准简直折磨，怎么能快速理解一下它的一些性质呢？</p>
+<p>float 和 int 一样，有 32 位，其中一位用来表示正负。</p>
+<pre><code class="language-c">#include&lt;float.h&gt;
+printf(&quot;%e\n&quot;,FLT_MAX); // 3.4e+38
+</code></pre>
+<p>float 和 int 的个数一样，那怎么用有限个数来表示 0~3.4e+38 的实数呢？</p>
+<p>一个显然的约定：等分，但很快就发现不合理的地方。</p>
+<pre><code class="language-python">3.4*10**38/(2**31) # 1.58e+29
+</code></pre>
+<p>意味着如果第一个数是 0 的话，第二个数就是 1.58e+29</p>
+
+            </section>
+        
+            <section >
+                <h2>枚举 float</h2>
+<pre><code class="language-c">for (float i=0;i&lt;=FLT_MAX;i+=1.0){
+  // 统计范围
+}
+</code></pre>
+<p>这样显然是不行的。</p>
+<p>我们需要的是二进制位枚举。</p>
+<p>能不能把一个变量既看成是 int 又看成是 float 呢？</p>
+<pre><code class="language-c">union s{
+  int i32;
+  float f32;
+};
+union s a;
+sizeof(a); // 4 bytes
+</code></pre>
+<p>试试 <a href="./dist/code/float-range.c">float-range.c</a></p>
+<p>使用 python 画个图出来： <a href="./dist/code/float-range.py">float-range.py</a></p>
+
+            </section>
+        
+            <section >
+                <h2>初学语法</h2>
+<pre><code>*
+**
+***
+****
+</code></pre>
+<p>相信大家都画过这样的三角形，当时你们没觉得这很酷吗？</p>
+<pre><code class="language-c">for (int i = 0; i &lt; 4; i++) {
+  for (int j = 0; j &lt;= i; j++) {
+    printf(&quot;*&quot;);
+  }
+  printf(&quot;\n&quot;);
+}
+</code></pre>
+
+            </section>
+        
+            <section >
+                <h2>Make some noise!</h2>
+<pre><code class="language-cpp">auto f = [](int i, int j) { return j &lt;= i; };
+// 可以是任意的 “判定”
+
+for (int i = 0; i &lt; 5; i++) {
+  for (int j = 0; j &lt; 5; j++) {
+    cout &lt;&lt; (f(i, j) ? '*' : ' '); // 注意括号
+  }
+  cout &lt;&lt; endl;
+}
+</code></pre>
+<p>试试 <a href=".dist/code/heart.cpp">heart.cpp</a></p>
+<p>你还可以在 <a href="https://www.wolframalpha.com/input?i=miku+curve">wolfram alpha</a> 上找到各种各样曲线的方程。（甚至初音未来）</p>
+
+            </section>
+        
+            <section >
+                <h2>Make some blocks!</h2>
+<p>虽然字符画已经很酷了 <a href="https://mzh.moegirl.org.cn/zh-hans/ASCII%E8%89%BA%E6%9C%AF">ascii艺术</a></p>
+<p>但是画出真正的图片更酷。怎么才能描述一张图片呢？</p>
+<div class="grid grid-cols-3 px-5 fragment">
+<img src="./dist/img/microscope_1.jpg"/> 
+<img src="./dist/img/microscope_2.jpg"/> 
+<img src="./dist/img/microscope_3.jpg"/> 
+<div>
+
+            </section>
+        
+            <section >
+                <h2>Make some blocks!(cont’d)</h2>
+<p><a href="https://en.wikipedia.org/wiki/Netpbm">netpbm</a></p>
+<pre><code>P3           # &quot;P3&quot; means this is a RGB color image in ASCII
+3 2          # &quot;3 2&quot; is the width and height of the image in pixels
+255          # &quot;255&quot; is the maximum value for each color
+# The part above is the header
+# The part below is the image data: RGB triplets
+255   0   0  # red
+  0 255   0  # green
+  0   0 255  # blue
+255 255   0  # yellow
+255 255 255  # white
+  0   0   0  # black
+</code></pre>
+<p><img src="./dist/img/Tiny6pixel.png" alt="" class="float-right px-10">
+试试 <a href="./dist/code/heart-pbm.cp">heart-pbm.cc</a></p>
+
+            </section>
+        
+
+    </section>
+    
+
+
+
+    
+    <section>
+        <section >
+            <h1>黑客帝国</h1>
+<p>模拟整个世界</p>
+
+            </section>
+        
+            <section >
+                <h2>垃圾代码不要扔</h2>
+<p>把它交给 <a href="https://www.ioccc.org/">IOCCC</a>（国际C语言混乱代码大赛） 吧！</p>
+<p>曾经有一个大小为 0 Btye 的代码获奖。</p>
+<p>这里有：</p>
+<ul>
+<li>最混乱</li>
+<li>最难读</li>
+<li>最暧昧</li>
+<li>最古怪</li>
+</ul>
+<p>的 C 代码。</p>
+
+            </section>
+        
+            <section >
+                <h2>举个甜甜圈</h2>
+<pre><code class="language-c">            k;double sin()
+         ,cos();main(){float A=
+       0,B=0,i,j,z[1760];char b[
+     1760];printf(&quot;\x1b[2J&quot;);for(;;
+  ){memset(b,32,1760);memset(z,0,7040)
+  ;for(j=0;6.28&gt;j;j+=0.07)for(i=0;6.28
+ &gt;i;i+=0.02){float c=sin(i),d=cos(j),e=
+ sin(A),f=sin(j),g=cos(A),h=d+2,D=1/(c*
+ h*e+f*g+5),l=cos      (i),m=cos(B),n=s\
+in(B),t=c*h*g-f*        e;int x=40+30*D*
+(l*h*m-t*n),y=            12+15*D*(l*h*n
++t*m),o=x+80*y,          N=8*((f*e-c*d*g
+ )*m-c*d*e-f*g-l        *d*n);if(22&gt;y&amp;&amp;
+ y&gt;0&amp;&amp;x&gt;0&amp;&amp;80&gt;x&amp;&amp;D&gt;z[o]){z[o]=D;;;b[o]=
+ &quot;.,-~:;=!*#$@&quot;[N&gt;0?N:0];}}/*#****!!-*/
+  printf(&quot;\x1b[H&quot;);for(k=0;1761&gt;k;k++)
+   putchar(k%80?b[k]:10);A+=0.04;B+=
+     0.02;}}/*****####*******!!=;:~
+       ~::==!!!**********!!!==::-
+         .,~~;;;========;;;:~-.
+             ..,--------,*/
+</code></pre>
+<p><a href="./dist/code/donut.c">donut.c</a> 以及<a href="https://www.a1k0n.net/2011/07/20/donut-math.html">背后的原理</a></p>
+
+            </section>
+        
+            <section >
+                <h2>逻辑模拟 vs 物理模拟</h2>
+<p>算法竞赛多为前者，比较简单，需要掌握一些编程技巧，本质上就是软件工程题。</p>
+<p><img src="./dist/img/Typhoon_Mawar_2005_computer_simulation_thumbnail.gif" alt="" class="float-right"></p>
+<p>后者就是模拟世界了，物理碰撞，化学反应，天气预报，<a href="https://www.youtube.com/watch?v=MXs_vkc8hpY">流体力学</a>，载人航天等等……</p>
+<p>我们今天要将的重点是前者。</p>
+
+            </section>
+        
+            <section >
+                <h2>最好的模拟题——自己写一个系统</h2>
+<p><img src="./dist/img/flappy_bird.gif" alt="" class="float-right"></p>
+<p>自己写一个 软件/操作系统/游戏 就可以掌握模拟题了！是不是很简单！</p>
+<p>EGE 库是 Windows 上的一个非常简单的 C/C++ 图形库。</p>
+<p><a href="https://www.luogu.com.cn/blog/ixRic/ege-flappy-bird">EGE 库入门 —— 手把手教你从零完成 Flappy Bird 的编写</a></p>
+
+            </section>
+        
+            <section >
+                <h2><a href="https://www.luogu.com.cn/problem/P1058">NOIP2008 普及组 立体图</a></h2>
+<p>给一个二维平面，每个位置上垒了若干个正方体，打印侧面渲染图。</p>
+<pre><code class="language-plain">3 4
+2 2 1 2
+2 2 1 1
+3 2 1 2
+</code></pre>
+<pre><code class="language-plain">......+---+---+...+---+
+..+---+  /   /|../   /|
+./   /|-+---+ |.+---+ |
++---+ |/   /| +-|   | +
+|   | +---+ |/+---+ |/|
+|   |/   /| +/   /|-+ |
++---+---+ |/+---+ |/| +
+|   |   | +-|   | + |/.
+|   |   |/  |   |/| +..
++---+---+---+---+ |/...
+|   |   |   |   | +....
+|   |   |   |   |/.....
++---+---+---+---+......
+</code></pre>
+
+            </section>
+        
+            <section >
+                <h2>优雅地写出模拟题</h2>
+<p>一句话总结：优雅地设计状态</p>
+<p>用左下角的坐标表示一个正方体。</p>
+<p>越低的，越左的，越后的会被挡住，所以我们优先画出它们。</p>
+
+            </section>
+        
+            <section >
+                <h2>看看绘制过程！</h2>
+<video width="auto" height="auto" class="center" controls>
+  <source src="https://bubbleioa.top/wp-content/uploads/2018/10/%E7%AB%8B%E4%BD%93%E5%9B%BE.mp4" type="video/mp4">
+</video>
+            </section>
+        
+            <section >
+                <h2>另一种解法</h2>
+<p>把立方体的所有点的坐标保存，点构成线，线构成面。</p>
+<p>然后我们设置一个点光源，向所有方向发射光线，再来一个摄像机，把收到的光线打印出来。</p>
+<p>天才的想法！这就是我们的 Computer Graphic 中的一部分 —— <a href="https://www.bilibili.com/video/BV1bb411W7gB">Ray Tracing</a>！</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/gsZiJeaMO48" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+            </section>
+        
+            <section >
+                <h2><a href="https://www.luogu.com.cn/problem/P3952">NOIP2017 提高组 时间复杂度</a></h2>
+<p>输入很毒瘤，但是程序逻辑并不复杂。（如果用对了方法的话）</p>
+<p>比如说 <code>enum</code></p>
+<pre><code class="language-c">// An example program to demonstrate working
+// of enum in C
+#include&lt;stdio.h&gt;
+ 
+enum week{Mon, Tue, Wed, Thur, Fri, Sat, Sun};
+ 
+int main()
+{
+    enum week day;
+    day = Wed;
+    printf(&quot;%d&quot;,day);
+    return 0;
+}
+</code></pre>
+
+            </section>
+        
+            <section >
+                <h2>有了输入输出和模拟，你就可以写一个游戏了！</h2>
+<p>什么游戏？当让是 Galgame（文字冒险游戏）！</p>
+<p>使用一个叫做 csv 的文件格式来描述流程。（现在看起来比较蠢XD）</p>
+<p>我们真的就能写出一个游戏来。</p>
+<p>Unity 使用的 C# 用起来很亲切。</p>
+<div class="fragment">
+<p>感觉缺少游戏性？<a href="https://adarkroom.doublespeakgames.com/?lang=zh_cn">试试小黑屋！</a></p>
+</div>
+            </section>
+        
+
+    </section>
+    
+
+
+
+    
+    <section>
+        <section >
+            <h1>兑现承诺</h1>
+<p>来画开头的那个图片吧！</p>
+
+            </section>
+        
+            <section >
+                <h2>但这也未免也太无趣了</h2>
+<p>我在这里写了一个<a href="https://bubbleioa.github.io/csintro-guide/lab0_mandelbrot.html">文档和框架代码</a>，你可以自己动手实现！（大概是 A+B problem 的难度）</p>
+
+            </section>
+        
+
+    </section>
+    
+
+
+
+    
+    <section>
+        <section >
+            <h1>性能分析</h1>
+<p>时间都去哪了？</p>
+
+            </section>
+        
+            <section >
+                <h2>冒泡排序</h2>
+<p><a href="https://visualgo.net/en/sorting">冒泡排序算法可视化</a></p>
+<p>直观</p>
+<p>交换的次数等于逆序对的个数</p>
+<p>$O(n^2)$</p>
+
+            </section>
+        
+            <section >
+                <h2>调用栈（Call stack）</h2>
+<p><img src="./dist/img/memory.jpg" alt="" class="float-right"></p>
+<p>在编程中，这样的用法是很常见的。</p>
+<pre><code class="language-c">int bar(int n){
+  printf(&quot;%d\n&quot;,n);
+}
+
+int foo(int n){
+  bar(n+1);
+  printf(&quot;%d\n&quot;,n);
+}
+int main(){
+  foo(1);
+}
+</code></pre>
+
+            </section>
+        
+            <section >
+                <h2>火焰图</h2>
+<p>一种简单的实现：采样法。</p>
+<p>每隔一段时间，我就去看看调用栈，然后统计看到的函数的占比，就能大概得到实现消耗。</p>
+<p><code>man perf</code> 经典的性能分析工具，但是不太友好。</p>
+<p>试试 <a href="https://github.com/flamegraph-rs/flamegraph">flamegraph</a> 和 <a href="./code/sort.c">sort.c</a></p>
+<div class="fragment">
+<p>$O(n^2) \lt O(nlogn)$ ?</p>
+<p>时间复杂度优秀的算法一定更快？抛开 workflow 谈性能就是耍流氓。</p>
+<p>实际上的工程/题目更复杂，很多时候排序只是代码很小的一部分，不用性能分析工具根本查不出来。</p>
+</div>
+            </section>
+        
+            <section >
+                <h2>CPP online tools</h2>
+<ul>
+<li><a href="https://cpp.sh/">C++ shell</a> 在线编译运行 C++，可以直接分享代码很方便</li>
+<li><a href="https://www.onlinegdb.com/">Online GDB</a> 在线 Debuger</li>
+<li><a href="https://quick-bench.com/">Quick Bench</a> 在线性能<strong>比较</strong></li>
+<li><a href="https://perfbench.com/">Perfbench</a> 在线性能<strong>分析</strong></li>
+<li><a href="https://www.build-bench.com/">Build Benchmark</a> 在线编译速度比较</li>
+<li><a href="https://cppinsights.io/">C++ Insights</a> 看看你的编译器怎么处理你的代码的（预编译）</li>
+<li><a href="https://godbolt.org/">Compiler Explorer</a> 在线对比不同平台，不同编译选项对最终程序的影响（我们看到的是反汇编）</li>
+</ul>
+
+            </section>
+        
+
+    </section>
+    
+
+
+
+    
+    <section>
+        <section >
+            <h1>总结</h1>
+<p>我们结束了……暂时</p>
+
+            </section>
+        
+            <section >
+                <h2>这节课学了什么？</h2>
+<ul>
+<li>宇宙的本质就是暴力
+<ul>
+<li>康威生命游戏</li>
+<li>枚举浮点数</li>
+<li>打印金字塔</li>
+</ul>
+</li>
+<li>我们可以模拟整个世界
+<ul>
+<li>渲染甜甜圈</li>
+<li>立体图/时间复杂度</li>
+<li>文字冒险游戏</li>
+</ul>
+</li>
+<li>性能分析
+<ul>
+<li>抛开 workload 谈性能就是耍流氓</li>
+<li>火焰图</li>
+<li>$O(n^2) \lt O(nlogn)$</li>
+</ul>
+</li>
+</ul>
+
+            </section>
+        
+
+    </section>
+    
+
+
+    </div>
+
+
+  </div>
+
+  <div class="line top"></div>
+  <div class="line bottom"></div>
+  <div class="line left"></div>
+  <div class="line right"></div>
+
+  <script src="libs/reveal.js/4.3.1/reveal.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/notes/notes.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/markdown/markdown.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/highlight/highlight.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/math/math.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/fullscreen/plugin.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/animate/plugin.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/animate/svg.min.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/anything/plugin.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/anything/Chart.min.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/anything/d3/d3.v3.min.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/anything/d3.patch.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/anything/d3/queue.v1.min.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/anything/d3/topojson.v1.min.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/anything/function-plot.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/customcontrols/plugin.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/embed-tweet/plugin.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/chart/chart.min.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/chart/plugin.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/verticator/verticator.js"></script>
+
+<script src="libs/reveal.js/4.3.1/plugin/zoom/zoom.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/search/search.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/menu/menu.js"></script>
+<script src="libs/reveal.js/4.3.1/plugin/chalkboard/plugin.js"></script>
+
+<!--	<script src="libs/reveal.js/4.3.1/plugin/audio-slideshow/plugin.js"></script>  -->
+<!--	<script src="libs/reveal.js/4.3.1/plugin/audio-slideshow/recorder.js"></script>-->
+<!--	<script src="libs/reveal.js/4.3.1/plugin/audio-slideshow/RecordRTC.js"></script>-->
+
+  
+
+<script>
+  const printPlugins = [
+      RevealNotes,
+      RevealHighlight,
+      RevealMath.MathJax3,
+      RevealAnimate,
+      RevealChalkboard, 
+			RevealEmbedTweet,
+			RevealChart,
+		];
+
+		const plugins =  [...printPlugins,
+		RevealZoom, 
+		RevealSearch, 
+				RevealMarkdown, 
+				RevealMenu, 
+				RevealFullscreen,
+				RevealAnything,
+				//RevealAudioSlideshow,
+				//RevealAudioRecorder,
+				RevealCustomControls, 
+				// poll
+				// question
+				// seminar
+				Verticator 
+				 ]
+
+
+		// Also available as an ES module, see:
+		// https://revealjs.com/initialization/
+		Reveal.initialize({
+			controls: true,
+      controlsTutorial: true,
+      controlsLayout: 'bottom-right',
+      controlsBackArrows: 'faded',
+      progress: true,
+      slideNumber: true,
+      //#showSlideNumber "all" "print" "speaker"
+      hash: true, //# hash: false,
+      //# respondToHashChanges: true,
+      //# history: false,
+      keyboard: true,
+      //#keyboardCondition: null,
+      overview: true,
+      center: true,
+      touch: true,
+      loop: false,
+      rtl: false,
+      //#navigationMode: 'default', linear grid
+      shuffle: false,
+      fragments: true,
+      fragmentInURL: false,
+      embedded: false,
+      help: true,
+      //#pause: true
+      showNotes: false,
+      autoPlayMedia: false, // TODO fix this to a nullable value
+      //#preloadIframes: null. true false
+      //#autoAnimate: true
+      //#autoAnimateMatcher: null,
+      //#autoAnimateEasing: 'ease',
+      //autoAnimateDuration: 1.0,
+      //#autoAnimateUnmatched: true
+      //#autoAnimateStyles: []
+      autoSlide: 0, // TODO fix this to a falseable value
+      autoSlideStoppable: true,
+      autoSlideMethod: '0',
+      defaultTiming: 120,
+      mouseWheel: false,
+      //#previewLinks: false
+      //#postMessage: true, // TODO : this can cause issues with the vscode api ???
+      //#postMessageEvents: false,
+      //#focusBodyOnPageVisibilityChange: true,
+      transition: 'slide',
+      transitionSpeed: 'default',
+      backgroundTransition: 'fade',
+      //#pdfMaxPagesPerSlide: Number.POSITIVE_INFINITY,
+      //#pdfSeparateFragments: true,
+      //#pdfPageHeightOffset: -1,
+      viewDistance: 3,
+      //#mobileViewDistance: 2,
+      display: 'block',
+      //#hideInactiveCursor: true,
+      //#hideCursorTime: 5000
+
+      // Parallax Background
+      parallaxBackgroundImage: '',
+      parallaxBackgroundSize: '',
+      parallaxBackgroundHorizontal: 0,
+      parallaxBackgroundVertical: 0,
+
+      //Presentation Size
+      width: 960,
+			height: 700,
+			margin: 0.04,
+      minScale: 0.2,
+      maxScale: 2,
+      disableLayout: false,
+
+      audio: {
+        prefix: 'audio/', // audio files are stored in the "audio" folder
+        suffix: '.ogg', // audio files have the ".ogg" ending
+        textToSpeechURL: null, // the URL to the text to speech converter
+        defaultNotes: false, // use slide notes as default for the text to speech converter
+        defaultText: false, // use slide text as default for the text to speech converter
+        advance: 0, // advance to next slide after given time in milliseconds after audio has played, use negative value to not advance
+        autoplay: false, // automatically start slideshow
+        defaultDuration: 5, // default duration in seconds if no audio is available
+        defaultAudios: true, // try to play audios with names such as audio/1.2.ogg
+        playerOpacity: 0.05, // opacity value of audio player if unfocused
+        playerStyle: 'position: fixed; bottom: 4px; left: 25%; width: 50%; height:75px; z-index: 33;', // style used for container of audio controls
+        startAtFragment: false, // when moving to a slide, start at the current fragment or at the start of the slide
+      },
+      
+      chalkboard: { // font-awesome.min.css must be available
+        //src: "chalkboard/chalkboard.json",
+        storage: "chalkboard-demo",
+      },
+      
+			customcontrols: {
+					controls: [
+      						{
+						  id: 'toggle-overview',
+						  title: 'Toggle overview (O)',
+						  icon: '<i class="fa fa-th"></i>',
+						  action: 'Reveal.toggleOverview();'
+						}
+						,
+      {
+        icon: '<i class="fa fa-pen-square"></i>',
+        title: 'Toggle chalkboard (B)',
+        action: 'RevealChalkboard.toggleChalkboard();'
+      },
+      {
+        icon: '<i class="fa fa-pen"></i>',
+        title: 'Toggle notes canvas (C)',
+        action: 'RevealChalkboard.toggleNotesCanvas();'
+      }
+      
+				]
+			},
+			chart: {
+					defaults: { 
+						color: 'lightgray', // color of labels
+						scale: { 
+							beginAtZero: true, 
+							ticks: { stepSize: 1 },
+							grid: { color: "lightgray" } , // color of grid lines
+						},
+					},
+					line: { borderColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ], "borderDash": [ [5,10], [0,0] ] }, 
+					bar: { backgroundColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ]}, 
+					pie: { backgroundColor: [ ["rgba(0,0,0,.8)" , "rgba(220,20,20,.8)", "rgba(20,220,20,.8)", "rgba(220,220,20,.8)", "rgba(20,20,220,.8)"] ]},
+					radar: { borderColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ]}, 
+			},
+			math: {
+				mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
+				config: 'TeX-AMS_HTML-full',
+				// pass other options into `MathJax.Hub.Config()`
+				TeX: { Macros: { RR: "{\\bf R}" } }
+				},
+				anything: [ 
+				{
+		className: "plot",
+		defaults: {width:500, height: 500, grid:true},
+		initialize: (function(container, options){ options.target = "#"+container.id; functionPlot(options) })
+	 },
+	 {
+		className: "chart",  
+		initialize: (function(container, options){ container.chart = new Chart(container.getContext("2d"), options);  })
+	 },
+	 {
+		className: "anything",
+		initialize: (function(container, options){ if (options && options.initialize) { options.initialize(container)} })
+	 },
+					],
+			// Learn about plugins: https://revealjs.com/plugins/
+			plugins: (window.location.search.match(/print-pdf/gi) ? printPlugins : plugins ) 
+		});
+			
+
+
+	    // Change chalkboard theme : 
+		function changeTheme(input) {
+			var config = {};
+			config.theme = input.value;
+			Reveal.getPlugin("RevealChalkboard").configure(config);
+			input.blur();
+		}
+
+		// // Handle the message inside the webview
+        // window.addEventListener('message', event => {
+
+        //     const message = event.data; // The JSON data our extension sent
+
+        //     switch (message.command) {
+        //         case 'refactor':
+        //             Reveal.toggleHelp();
+        //     }
+        // });
+
+		if (window.location.search.match(/print-pdf-now/gi)) {
+      		setTimeout(() => {
+				window.print();
+			  }, 2500);
+			
+    }
+</script>
+
+</body>
+
+</html>
