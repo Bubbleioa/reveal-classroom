@@ -2,6 +2,8 @@
 
 适合于授课的 reveal.js 主题。
 
+[示例预览](https://bubbleioa.top/slides/xcpc/brute_force/)
+
 ```
 .
 ├── classRoom.css // 自定义 css
