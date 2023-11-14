@@ -2,7 +2,7 @@
 
 适合于授课的 reveal.js 主题。
 
-[示例预览](https://bubbleioa.top/slides/xcpc/brute_force/)
+[示例预览](https://bubbleioa.github.io/reveal-classroom)
 
 ```
 .
