@@ -3,7 +3,7 @@
 #include <string.h>
 #include <assert.h>
 #include <time.h>
-#define N 4
+#define N 10
 #define TIMES 10000000
 int a[N];
 int b[N];
